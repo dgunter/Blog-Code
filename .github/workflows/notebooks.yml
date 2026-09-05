@@ -1,0 +1,46 @@
+name: Notebooks
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  run:
+    name: Lint and execute
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install the current stable tshark for the TDS notebook
+        # Ubuntu's own package lags; the Wireshark project's PPA tracks the latest stable release.
+        run: |
+          sudo add-apt-repository -y ppa:wireshark-dev/stable
+          sudo apt-get update -q
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -q tshark
+          tshark --version | head -1
+      - name: Install the Python environment
+        run: uv sync --frozen
+      - name: Lint code cells
+        run: uv run ruff check .
+      - name: Execute every notebook
+        run: |
+          uv run jupyter nbconvert --to notebook --execute --output-dir /tmp/executed \
+            --ExecutePreprocessor.timeout=600 \
+            "Bro HTTP Log Analysis/"*.ipynb "TDS Analysis/"*.ipynb
+      - name: Fail on cells that wrote to stderr
+        run: |
+          uv run python - <<'PY'
+          import json, pathlib, sys
+          bad = []
+          for nb in pathlib.Path("/tmp/executed").glob("*.ipynb"):
+              cells = json.loads(nb.read_text())["cells"]
+              for i, c in enumerate(cells):
+                  for o in c.get("outputs", []):
+                      if o.get("name") == "stderr":
+                          bad.append(f"{nb.name} cell {i}: {''.join(o['text'])[:200]}")
+          print("\n".join(bad) or "no stderr output")
+          sys.exit(1 if bad else 0)
+          PY

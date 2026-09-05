@@ -1,0 +1,39 @@
+[project]
+name = "blog-code"
+version = "2.0.0"
+description = "Jupyter notebooks from the Threat Hunting with Python series at dgunter.com"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dependencies = [
+    "jupyter>=1.1",
+    "matplotlib>=3.9",
+    "pandas>=2.2",
+    "parsezeeklogs>=3.0.1",
+    "pyshark>=0.6",
+]
+
+[dependency-groups]
+dev = [
+    "nbconvert>=7.16",
+    "ruff>=0.6",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+# Notebooks: expressions on their own line are how cells display values.
+ignore = ["B018"]
+
+[tool.ruff.lint.per-file-ignores]
+# The 2017 notebooks are kept as written, long user-agent strings included.
+"Bro HTTP Log Analysis/Bro HTTP Nmap Indicator Detection.ipynb" = ["E501"]
+"Bro HTTP Log Analysis/Detecting Nmap Behavior with Bro HTTP Logs.ipynb" = ["E501"]
+
+[tool.uv]
+package = false
