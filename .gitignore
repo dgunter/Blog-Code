@@ -40,7 +40,8 @@ htmlcov/
 .tox/
 .coverage
 .coverage.*
-.cache
+.cache/
+.ruff_cache/
 nosetests.xml
 coverage.xml
 *,cover
@@ -88,3 +89,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# IDEs
+.idea/
+.vscode/
+
+# Notebook execution artefacts
+/tmp/
