@@ -14,10 +14,13 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-      - name: Install tshark for the TDS notebook
+      - name: Install the current stable tshark for the TDS notebook
+        # Ubuntu's own package lags; the Wireshark project's PPA tracks the latest stable release.
         run: |
+          sudo add-apt-repository -y ppa:wireshark-dev/stable
           sudo apt-get update -q
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -q tshark
+          tshark --version | head -1
       - name: Install the Python environment
         run: uv sync --frozen
       - name: Lint code cells

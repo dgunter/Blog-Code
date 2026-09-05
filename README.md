@@ -41,8 +41,9 @@ the posts.
 ## Running them
 
 Requires Python 3.10 or newer and [uv](https://docs.astral.sh/uv/). The TDS
-notebook also needs `tshark` from Wireshark on your `PATH`
-(`brew install wireshark` on macOS, `apt install tshark` on Debian and Ubuntu).
+notebook also needs `tshark` from a current Wireshark on your `PATH`: 4.6 is
+what it was verified with (`brew install wireshark` on macOS; on Ubuntu the
+`ppa:wireshark-dev/stable` PPA carries the latest release, as CI uses).
 
 ```bash
 uv sync
