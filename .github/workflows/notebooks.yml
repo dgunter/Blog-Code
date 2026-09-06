@@ -25,10 +25,12 @@ jobs:
         run: uv sync --frozen
       - name: Lint code cells
         run: uv run ruff check .
+      - name: Build the Zeek image for the TDS notebook
+        run: docker build -q -t zeek-tds:0.2.0 "TDS Analysis/zeek"
       - name: Execute every notebook
         run: |
           uv run jupyter nbconvert --to notebook --execute --output-dir /tmp/executed \
-            --ExecutePreprocessor.timeout=600 \
+            --ExecutePreprocessor.timeout=1500 \
             "Bro HTTP Log Analysis/"*.ipynb "TDS Analysis/"*.ipynb
       - name: Fail on cells that wrote to stderr
         run: |
