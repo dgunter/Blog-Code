@@ -18,15 +18,18 @@ their images so the code has its narrative next to it.
 | [Detecting Nmap Behavior with Bro HTTP Logs](Bro%20HTTP%20Log%20Analysis/Detecting%20Nmap%20Behavior%20with%20Bro%20HTTP%20Logs.ipynb) | The same log as a time series: user agents and status codes per minute, with the scan window standing out once the busy browser is removed | [Part 2: Detecting Nmap Behavior with Bro HTTP Logs](docs/2017-11-threat-hunting-with-python-part-2-nmap-bro-http.md) (2017-11) |
 | [Detecting Nmap Behavior with ParseZeekLogs](Bro%20HTTP%20Log%20Analysis/Detecting%20Nmap%20Behavior%20with%20ParseZeekLogs.ipynb) | Both hunts above redone with [ParseZeekLogs](https://github.com/dgunter/ParseZeekLogs) and pandas, added in 2026 | same two posts |
 | [tds](TDS%20Analysis/tds.ipynb) | Pull TDS packet types, SQL batches and remote procedure calls out of a pcap with pyshark and look at what a historian's clients actually run | [Part 4: Examining Microsoft SQL Based Historian Traffic](docs/2018-03-threat-hunting-with-python-part-4-mssql-historian.md) (2018-03) |
+| [tds-zeek](TDS%20Analysis/tds-zeek.ipynb) | The same capture through Zeek with the [zeek-tds](https://github.com/dgunter/zeek-tds) analyzer, added in 2026: reassembled messages, every procedure call with its parameters and prepared-statement SQL, read into pandas with ParseZeekLogs | same post, revisited |
 
 [Part 3: Taming SMB](docs/2018-02-threat-hunting-with-python-part-3-taming-smb.md)
 (2018-02) is preserved too; its examples were shown inline rather than as a
 notebook.
 
-The TDS notebook works from the packet capture rather than from Zeek logs
-because Zeek has no TDS analyzer, then or now: Zeek 8.2.2 run over the same
-pcap produces only `conn.log` for the port 1433 sessions. pyshark hands the
-fields Wireshark's TDS dissector decodes to pandas instead.
+The 2018 TDS notebook works from the packet capture with pyshark because
+Zeek had no usable TDS analyzer at the time. It now does: `tds-zeek.ipynb`
+runs Zeek 8.2 with the [zeek-tds](https://github.com/dgunter/zeek-tds)
+package in Docker (built from `TDS Analysis/zeek/Dockerfile` on first run,
+which takes a few minutes) and finds the calls the packet-by-packet approach
+missed. Docker is the only extra requirement.
 
 The 2017 notebooks split each log line on tabs and count values in
 dictionaries. They were written for Python 2.7 and have been ported to run on
@@ -57,7 +60,8 @@ relative path. To execute everything from the command line, the way CI does:
 uv run jupyter nbconvert --to notebook --execute --inplace "Bro HTTP Log Analysis/"*.ipynb "TDS Analysis/"*.ipynb
 ```
 
-`uv run ruff check .` lints the code cells. The GitHub Actions workflow runs
+`uv run ruff check .` lints the code cells. The Zeek notebook needs Docker; it
+builds the `zeek-tds:0.2.0` image on first run. The GitHub Actions workflow runs
 the lint and executes every notebook on each push and pull request, and fails
 if any cell errors or writes to stderr.
 
@@ -80,5 +84,5 @@ if any cell errors or writes to stderr.
 
 ## License
 
-MIT, see [LICENSE](LICENSE). The posts under `docs/` are my own writing,
+Apache 2.0, see [LICENSE](LICENSE). The posts under `docs/` are my own writing,
 reproduced from the Wayback Machine.

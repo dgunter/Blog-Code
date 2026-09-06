@@ -3,7 +3,7 @@ name = "blog-code"
 version = "2.0.0"
 description = "Jupyter notebooks from the Threat Hunting with Python series at dgunter.com"
 readme = "README.md"
-license = "MIT"
+license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
 dependencies = [
