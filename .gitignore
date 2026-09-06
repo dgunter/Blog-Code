@@ -96,3 +96,6 @@ ENV/
 
 # Notebook execution artefacts
 /tmp/
+
+# Unpublished drafts
+docs/*-draft.md
