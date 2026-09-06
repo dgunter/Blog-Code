@@ -84,5 +84,5 @@ if any cell errors or writes to stderr.
 
 ## License
 
-MIT, see [LICENSE](LICENSE). The posts under `docs/` are my own writing,
+Apache 2.0, see [LICENSE](LICENSE). The posts under `docs/` are my own writing,
 reproduced from the Wayback Machine.
